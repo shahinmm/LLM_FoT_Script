@@ -1,0 +1,48 @@
+{
+    FUNCTION mydiv[n,d] { RETURN IF[d!=0, n/d, 9999999] }
+    syms = ['+', '-', '*', '/']
+    op = { '+': '+', '-': '-', '*': '*', '/': '/' }
+    
+    FUNCTION evaluate[x, y, z, a, b, c, d] {
+        IF[ROUND[AI[x[AI[y[a, b]], AI[z[c, d]]]], 5] == 24,
+            RETURN "(" + a + " " + op[y] + " " + b + ") " + op[x] + " (" + c + " " + op[z] + " " + d + ")"
+        ]
+        IF[ROUND[AI[x[a, AI[y[b, AI[z[c, d]]]]]], 5] == 24,
+            RETURN a + " " + op[x] + " (" + b + " " + op[y] + " (" + c + " " + op[z] + " " + d + "))"
+        ]
+        IF[ROUND[AI[x[AI[y[AI[z[c, d]], b]], a]], 5] == 24,
+            RETURN "((" + c + " " + op[z] + " " + d + ") " + op[y] + " " + b + ") " + op[x] + " " + a
+        ]
+        IF[ROUND[AI[x[AI[y[b, AI[z[c, d]]]], a]], 5] == 24,
+            RETURN "(" + b + " " + op[y] + " (" + c + " " + op[z] + " " + d + ")) " + op[x] + " " + a
+        ]
+        RETURN "--Not Found--"
+    }
+    
+    FUNCTION solve24[nums] {
+        FOR x IN syms {
+            FOR y IN syms {
+                FOR z IN syms {
+                    FOR a, b, c, d IN PERMUTATIONS[nums] {
+                        result = evaluate[x, y, z, a, b, c, d]
+                        IF[result != "--Not Found--", RETURN result]
+                    }
+                }
+            }
+        }
+        RETURN "--Not Found--"
+    }
+    
+    PRINT[solve24[[14,8,8,2]]] // "((14 - 8) / 2) * 8"
+    PRINT[solve24[[9,5,5,5]]] // "9 + (5 + (5 + 5))"
+    PRINT[solve24[[8,6,4,4]]] // "(6 * 4) + (8 + 4)"
+    PRINT[solve24[[13,10,9,4]]] // "4 * (10 + (9 - 13))"
+    PRINT[solve24[[8,8,5,4]]] // "4 * (5 + (8 / 8))"
+    PRINT[solve24[[11,11,1,1]]] // "11 + (11 + (1 + 1))"
+    PRINT[solve24[[11,7,4,1]]] // "((4 + 1) * 7) - 11"
+    PRINT[solve24[[11,5,4,3]]] // "((11 * 3) - 4) - 5"
+    PRINT[solve24[[13,12,5,2]]] // "13 + (5 + (12 / 2))"
+    PRINT[solve24[[9,8,2,1]]] // "((8 * 2) - 1) + 9"
+    PRINT[solve24[[14,8,8,2]]] // "((14 - 8) / 2) * 8"
+}
+``` &#8203;:citation[oaicite:0]{index=0}&#8203;

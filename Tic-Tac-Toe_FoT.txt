@@ -1,0 +1,71 @@
+Execute the FoT step-by-step:
+
+//Initialize the board and variables.
+//Print the current board state.
+//Ask the current player for their move.
+//Validate and update the board.
+//Check for a win or draw condition.
+//Alternate turns between yourself and the user.
+//Repeat until the game ends with a win or a draw.
+//Let's proceed with the game. Enter the moves as prompted.
+//Run the Function of Thought below (NO PYTHON)
+
+{
+INIT_BOARD = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+TURN = "X";
+MOVES = 0;
+
+FUNCTION PRINT_BOARD[BOARD] {
+    PRINT[ "\n" + " " + BOARD[0] + " | " + BOARD[1] + " | " + BOARD[2] + "\n" +
+    "---+---+---\n" +
+    " " + BOARD[3] + " | " + BOARD[4] + " | " + BOARD[5] + "\n" +
+    "---+---+---\n" +
+    " " + BOARD[6] + " | " + BOARD[7] + " | " + BOARD[8] + "\n"
+    ];
+}
+
+FUNCTION CHECK_WIN[BOARD, PLAYER] {
+    RETURN [ (BOARD[0] == PLAYER && BOARD[1] == PLAYER && BOARD[2] == PLAYER) ||
+    (BOARD[3] == PLAYER && BOARD[4] == PLAYER && BOARD[5] == PLAYER) ||
+    (BOARD[6] == PLAYER && BOARD[7] == PLAYER && BOARD[8] == PLAYER) ||
+    (BOARD[0] == PLAYER && BOARD[3] == PLAYER && BOARD[6] == PLAYER) ||
+    (BOARD[1] == PLAYER && BOARD[4] == PLAYER && BOARD[7] == PLAYER) ||
+    (BOARD[2] == PLAYER && BOARD[5] == PLAYER && BOARD[8] == PLAYER) ||
+    (BOARD[0] == PLAYER && BOARD[4] == PLAYER && BOARD[8] == PLAYER) ||
+    (BOARD[2] == PLAYER && BOARD[4] == PLAYER && BOARD[6] == PLAYER)
+    ];
+}
+
+FUNCTION TIC_TAC_TOE[] {
+    WHILE MOVES < 9 {
+        PRINT_BOARD[INIT_BOARD];
+        POS = INPUT["Player " + TURN + ", enter a position (1-9): "];
+
+        IF INIT_BOARD[POS-1] != "X" && INIT_BOARD[POS-1] != "O" {
+            INIT_BOARD[POS-1] = TURN;
+            MOVES = MOVES + 1;
+
+            IF CHECK_WIN[INIT_BOARD, TURN] {
+            PRINT_BOARD[INIT_BOARD];
+            PRINT["Player " + TURN + " wins!"];
+            BREAK;
+            }
+
+            IF TURN == "X" {
+            TURN = "O";
+            } ELSE {
+            TURN = "X";
+            }
+        } ELSE {
+        PRINT["Invalid move, try again."];
+        }
+    }
+
+    IF MOVES == 9 {
+        PRINT_BOARD[INIT_BOARD];
+        PRINT["It's a draw!"];
+    }
+}
+
+TIC_TAC_TOE[];
+}
