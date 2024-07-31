@@ -1,0 +1,55 @@
+{
+    // Execute the K-means clustering PoT code with house names
+    k = 2;
+    centroids = [{1.2, 3.4}, {5.6, 7.8}];  // initial centroids
+    data = [
+        {"house": "House A", "coordinates": [1.2, 3.4]},
+        {"house": "House B", "coordinates": [5.6, 7.8]},
+        {"house": "House C", "coordinates": [9.0, 1.2]},
+        {"house": "House D", "coordinates": [3.4, 5.6]},
+        {"house": "House E", "coordinates": [7.8, 9.0]},
+        {"house": "House F", "coordinates": [2.1, 4.3]},
+        {"house": "House G", "coordinates": [6.5, 8.7]},
+        {"house": "House H", "coordinates": [8.9, 2.1]},
+        {"house": "House I", "coordinates": [4.3, 6.5]}
+    ];
+
+    FUNCTION EUCLIDEAN_DIST[p1, p2] {
+        return SQRT[(p1[0] - p2[0])^2 + (p1[1] - p2[1])^2];
+    };
+
+    labels = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    FOR i=0, i<LEN[data], i=i+1 {
+        min_dist = INFINITY;
+        FOR j=0, j<k, j=j+1 {
+            dist = EUCLIDEAN_DIST[data[i]["coordinates"], centroids[j]];
+            IF[dist < min_dist, {min_dist = dist; labels[i] = j;}];
+        };
+    };
+
+    new_centroids = [[0, 0], [0, 0]];
+    counts = [0, 0];
+    FOR i=0, i<LEN[data], i=i+1 {
+        new_centroids[labels[i]][0] = new_centroids[labels[i]][0] + data[i]["coordinates"][0];
+        new_centroids[labels[i]][1] = new_centroids[labels[i]][1] + data[i]["coordinates"][1];
+        counts[labels[i]] = counts[labels[i]] + 1;
+    };
+
+    FOR j=0, j<k, j=j+1 {
+        new_centroids[j][0] = new_centroids[j][0] / counts[j];
+        new_centroids[j][1] = new_centroids[j][1] / counts[j];
+    };
+
+    centroids = new_centroids;
+
+    // Separate houses into clusters
+    cluster1 = [];
+    cluster2 = [];
+    FOR i=0, i<LEN[data], i=i+1 {
+        IF[labels[i] == 0, {APPEND[cluster1, data[i]["house"]]}, {APPEND[cluster2, data[i]["house"]]}];
+    };
+
+    // Display results
+    PRINT["Cluster 1: " + cluster1];
+    PRINT["Cluster 2: " + cluster2];
+}
